@@ -23,6 +23,7 @@ app.add_middleware(
 class VoltCore:
     def __init__(self):
         self.battery_level = 100.0
+        self.baseline_hrv = 60.0  # Default value
         self.last_update = datetime.now()
         self.db_path = "volt.db"
         self._init_db()
@@ -30,29 +31,40 @@ class VoltCore:
 
     def _init_db(self):
         with sqlite3.connect(self.db_path) as conn:
+            # Create table if not exists
             conn.execute("""
                 CREATE TABLE IF NOT EXISTS battery_state (
                     id INTEGER PRIMARY KEY,
                     level REAL,
+                    baseline_hrv REAL,
                     last_updated TIMESTAMP
                 )
             """)
+            
+            # Simple Migration: Check if baseline_hrv column exists, if not add it
+            try:
+                cursor = conn.execute("SELECT baseline_hrv FROM battery_state LIMIT 1")
+            except sqlite3.OperationalError:
+                # Column likely missing, add it
+                conn.execute("ALTER TABLE battery_state ADD COLUMN baseline_hrv REAL DEFAULT 60.0")
 
     def load_state(self):
         try:
             with sqlite3.connect(self.db_path) as conn:
-                cursor = conn.execute("SELECT level FROM battery_state ORDER BY id DESC LIMIT 1")
+                cursor = conn.execute("SELECT level, baseline_hrv FROM battery_state ORDER BY id DESC LIMIT 1")
                 row = cursor.fetchone()
                 if row:
                     self.battery_level = row[0]
+                    if row[1] is not None:
+                        self.baseline_hrv = row[1]
         except Exception as e:
             print(f"DB Load Error: {e}")
 
     def save_state(self):
         try:
             with sqlite3.connect(self.db_path) as conn:
-                conn.execute("INSERT INTO battery_state (level, last_updated) VALUES (?, ?)", 
-                             (self.battery_level, datetime.now()))
+                conn.execute("INSERT INTO battery_state (level, baseline_hrv, last_updated) VALUES (?, ?, ?)", 
+                             (self.battery_level, self.baseline_hrv, datetime.now()))
         except Exception as e:
             print(f"DB Save Error: {e}")
 
@@ -61,12 +73,11 @@ class VoltCore:
         is_home = is_home_override if is_home_override is not None else False
         
         # 2. Calculate Stress Multiplier
-        # HRV Baseline ~ 60ms. Lower HRV = Higher Stress.
-        baseline_hrv = 60.0
+        # Use persisting baseline_hrv
         stress_multiplier = 1.0
         
         if hrv is not None and hrv > 0:
-            stress_multiplier = baseline_hrv / hrv
+            stress_multiplier = self.baseline_hrv / hrv
             # Cap multiplier between 0.5x (Relaxed) and 3.0x (High Stress)
             stress_multiplier = max(0.5, min(stress_multiplier, 3.0))
         
