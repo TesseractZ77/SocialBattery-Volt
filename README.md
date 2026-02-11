@@ -1,57 +1,78 @@
-# Volt - Run Instructions
+# Volt - Social Battery Tracker v1.0
 
-## 1. Backend Server (Python)
+Volt provides a dynamic visual representation of your "social battery." It mimics a real battery that drains when you are socializing or in stressful environments and automatically recharges when you return home.
 
-The backend engine handles the logic and battery state for Volt.
+## Project Overview
 
-### Prerequisite
-Ensure Python 3.10+ is installed.
+Volt is a hybrid iOS and Python application designed to quantify social exhaustion. By combining real-time environmental data (crowd density via Bluetooth), physiological data (Heart Rate Variability via HealthKit), and geofencing (Home/Away status), Volt calculates a personalized "drain rate" for your social energy.
 
-### Setup
-1. Open a terminal and navigate to the project root.
-2. Go to the backend folder:
-   ```bash
-   cd backend
-   ```
-3. Install dependencies:
-   ```bash
-   pip install fastapi uvicorn[standard]
-   ```
+### Key Features
+- **Dynamic Visuals**: A fluid wave animation that changes color (Green -> Yellow -> Red) based on your energy level.
+- **Smart Geofencing**: Automatically detects when you leave home (starts draining) and when you return (starts recharging).
+- **Crowd Sensing**: Uses Bluetooth to detect nearby devices as a proxy for crowd density.
+- **Health Integration**: Apple HealthKit integration to use HRV (Heart Rate Variability) as a stress modifier.
 
-### Start Server
-1. Run the server:
-   ```bash
-   python3 -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-   ```
-   *Note: Using `0.0.0.0` makes the server accessible to other devices on your local network (like your iPhone).*
+## Tech Stack
 
-2. Verify it's running by opening a browser to: `http://localhost:8000/` (You should see `{"status": "ok"}`).
+### Frontend (iOS)
+- **Language**: Swift 5
+- **Framework**: SwiftUI
+- **Core Frameworks**:
+  - `CoreLocation`: Geofencing and location tracking.
+  - `CoreBluetooth`: Scanning visible peripherals to estimate crowd size.
+  - `HealthKit`: Reading HRV data.
+  - `Combine`: Reactive state management.
+  - `MapKit`: Address autocomplete for settings.
 
----
+### Backend (Python)
+- **Language**: Python 3.9+
+- **Framework**: FastAPI
+- **Server**: Uvicorn (ASGI)
+- **Protocol**: WebSockets (Real-time bi-directional communication)
+- **Data Model**: Pydantic models for state validation.
 
-## 2. Frontend App (iOS Simulator / Device)
+## Core Algorithm
 
-### Setup
-1. Open **Xcode**.
-2. Create a new **iOS App** project named `SocialBattery` (choose SwiftUI).
-3. Replace `SocialBatteryApp.swift` and `BatteryView.swift` with the files provided in `ios/SocialBattery/`.
-4. Add permission strings to `Info.plist`:
-   * Key: `Privacy - Location When In Use Usage Description`
-   * Value: "We need your location to know if you are home."
+Volt uses a custom algorithm to calculate energy status.
 
-### Connecting to Local Server
-**Important**: The iOS Simulator cannot reach `localhost` effectively if running inside a sandbox, but usually `127.0.0.1` works fine on Simulator.
+### 1. The Drain Formula (Away Mode)
+When the user is **Away** (distance > 100m from Home), the battery drains every 5 seconds based on:
 
-For a **Physical Device**:
-1. Find your computer's local IP address (e.g., `192.168.1.50`).
-2. Update `BatteryView.swift` line ~43:
-   ```swift
-   guard let url = URL(string: "ws://192.168.1.50:8000/ws") else { return }
-   ```
-3. Build and run on your device.
+```python
+Drain = (BaseRate + (CrowdFactor * 0.2)) * StressMultiplier
+```
 
----
+- **BaseRate**: A constant drain (e.g., 1.0 unit).
+- **CrowdFactor**: Number of unique Bluetooth devices detected nearby.
+  - *Example*: 10 devices adds 2.0 to the drain rate.
+- **StressMultiplier**: Derived from HRV (Heart Rate Variability).
+  - *Formula*: `BaselineHRV / CurrentHRV`
+  - If you are stressed (low HRV), the multiplier increases (>1.0), draining battery faster.
+  - If you are relaxed (high HRV), the multiplier decreases (<1.0).
 
-## Expected Behavior
-1. The app will connect via WebSocket (status: "CONNECTING..." -> "IDLE" or "RECHARGING").
-2. While moving around (or simulating location in Xcode -> Debug -> Simulate Location), the battery state will update in real-time.
+### 2. The Recharge Formula (Home Mode)
+When the user is **Home** (distance < 100m), the battery recharges:
+
+```python
+Recharge = BaseRechargeRate (e.g., 2.0 units per tick)
+```
+
+- Recharging stops automatically at 100%.
+
+## Setup & Running
+
+### 1. Backend
+Navigate to the `backend` folder and run the server:
+```bash
+uvicorn main:app --reload --host 0.0.0.0
+```
+
+### 2. Frontend (iOS)
+1. Open `ios/Volt/Volt.xcodeproj` in Xcode.
+2. Connect your iPhone via USB.
+3. Select your device as the run destination.
+4. Ensure your iPhone and Mac are on the same Wi-Fi network.
+5. Press **Run** (Cmd+R).
+
+## License
+MIT License - Volt Project 2026
