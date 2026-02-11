@@ -3,6 +3,7 @@ import CoreLocation
 import Combine
 import CoreBluetooth
 import HealthKit
+import MapKit
 
 // MARK: - Models
 struct BatteryState: Codable {
@@ -14,6 +15,33 @@ struct BatteryState: Codable {
 }
 
 // MARK: - View Model
+
+// Address Completer
+class AddressCompleter: NSObject, ObservableObject, MKLocalSearchCompleterDelegate {
+    @Published var queryFragment: String = "" {
+        didSet {
+            completer.queryFragment = queryFragment
+        }
+    }
+    @Published var searchResults = [MKLocalSearchCompletion]()
+    
+    private let completer = MKLocalSearchCompleter()
+    
+    override init() {
+        super.init()
+        completer.delegate = self
+        completer.resultTypes = .address
+    }
+    
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        self.searchResults = completer.results
+    }
+    
+    func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+        // Handle error if needed
+    }
+}
+
 class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, CBCentralManagerDelegate {
     @Published var batteryLevel: Double = 100.0
     @Published var status: String = "CONNECTING..."
@@ -338,6 +366,9 @@ struct SettingsView: View {
     @Binding var addressInput: String
     @Environment(\.presentationMode) var presentationMode
     
+    // Autocomplete Logic
+    @StateObject private var addressCompleter = AddressCompleter()
+    
     var body: some View {
         NavigationView {
             Form {
@@ -351,10 +382,35 @@ struct SettingsView: View {
                     }
                     .padding(.vertical, 5)
                     
-                    TextField("Set New Home Address", text: $addressInput, onCommit: {
-                        viewModel.setHomeAddress(addressInput)
-                        addressInput = ""
+                    TextField("Set Home Address", text: $addressCompleter.queryFragment, onCommit: {
+                        // If user hits enter without selecting a completion, try the text directly
+                        if !addressCompleter.queryFragment.isEmpty {
+                            viewModel.setHomeAddress(addressCompleter.queryFragment)
+                            addressCompleter.queryFragment = ""
+                        }
                     })
+                    
+                    // Suggestions List
+                    if !addressCompleter.queryFragment.isEmpty && !addressCompleter.searchResults.isEmpty {
+                        List(addressCompleter.searchResults, id: \.self) { completion in
+                            Button(action: {
+                                let fullAddress = completion.title + " " + completion.subtitle
+                                viewModel.setHomeAddress(fullAddress)
+                                addressCompleter.queryFragment = "" // Clear search
+                                addressCompleter.searchResults = [] // Clear results
+                            }) {
+                                VStack(alignment: .leading) {
+                                    Text(completion.title)
+                                        .font(.subheadline)
+                                        .bold()
+                                    Text(completion.subtitle)
+                                        .font(.caption)
+                                        .foregroundColor(.gray)
+                                }
+                            }
+                        }
+                        .frame(height: 200) // Limit height so it doesn't take over screen
+                    }
                 }
                 
                 Section(header: Text("Current Location & Status")) {
@@ -457,7 +513,7 @@ struct BatteryView: View {
                     Text("VOLT")
                         .font(.system(size: 20, weight: .bold, design: .monospaced))
                         .foregroundColor(.white.opacity(0.8))
-                        // Center the text absolute by using overlay or manual padding, 
+                        // Center the text absolute by using overlay or manual padding,
                         // but Spacer+Spacer works for simple implementation
                     Spacer()
                 }
@@ -474,7 +530,7 @@ struct BatteryView: View {
                         }
                     }
                 )
-                .padding(.top, 50)
+                .padding(.top, 80) // Increased to clear Dynamic Island
                 
                 Spacer()
                 
