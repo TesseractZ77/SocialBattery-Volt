@@ -1,0 +1,588 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		3D92EA1D2F3C03E4007A9731 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D92EA042F3C03E2007A9731 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D92EA0B2F3C03E2007A9731;
+			remoteInfo = Volt;
+		};
+		3D92EA272F3C03E4007A9731 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D92EA042F3C03E2007A9731 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D92EA0B2F3C03E2007A9731;
+			remoteInfo = Volt;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3D92EA0C2F3C03E2007A9731 /* Volt.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Volt.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D92EA1C2F3C03E4007A9731 /* VoltTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoltTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D92EA262F3C03E4007A9731 /* VoltUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VoltUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		3D92EA3B2F3C0C35007A9731 /* Exceptions for "Volt" folder in "Volt" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 3D92EA0B2F3C03E2007A9731 /* Volt */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3D92EA0E2F3C03E2007A9731 /* Volt */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				3D92EA3B2F3C0C35007A9731 /* Exceptions for "Volt" folder in "Volt" target */,
+			);
+			path = Volt;
+			sourceTree = "<group>";
+		};
+		3D92EA1F2F3C03E4007A9731 /* VoltTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VoltTests;
+			sourceTree = "<group>";
+		};
+		3D92EA292F3C03E4007A9731 /* VoltUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = VoltUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3D92EA092F3C03E2007A9731 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D92EA192F3C03E4007A9731 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D92EA232F3C03E4007A9731 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3D92EA032F3C03E2007A9731 = {
+			isa = PBXGroup;
+			children = (
+				3D92EA0E2F3C03E2007A9731 /* Volt */,
+				3D92EA1F2F3C03E4007A9731 /* VoltTests */,
+				3D92EA292F3C03E4007A9731 /* VoltUITests */,
+				3D92EA0D2F3C03E2007A9731 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3D92EA0D2F3C03E2007A9731 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3D92EA0C2F3C03E2007A9731 /* Volt.app */,
+				3D92EA1C2F3C03E4007A9731 /* VoltTests.xctest */,
+				3D92EA262F3C03E4007A9731 /* VoltUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3D92EA0B2F3C03E2007A9731 /* Volt */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D92EA302F3C03E4007A9731 /* Build configuration list for PBXNativeTarget "Volt" */;
+			buildPhases = (
+				3D92EA082F3C03E2007A9731 /* Sources */,
+				3D92EA092F3C03E2007A9731 /* Frameworks */,
+				3D92EA0A2F3C03E2007A9731 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3D92EA0E2F3C03E2007A9731 /* Volt */,
+			);
+			name = Volt;
+			packageProductDependencies = (
+			);
+			productName = Volt;
+			productReference = 3D92EA0C2F3C03E2007A9731 /* Volt.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3D92EA1B2F3C03E4007A9731 /* VoltTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D92EA332F3C03E4007A9731 /* Build configuration list for PBXNativeTarget "VoltTests" */;
+			buildPhases = (
+				3D92EA182F3C03E4007A9731 /* Sources */,
+				3D92EA192F3C03E4007A9731 /* Frameworks */,
+				3D92EA1A2F3C03E4007A9731 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D92EA1E2F3C03E4007A9731 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3D92EA1F2F3C03E4007A9731 /* VoltTests */,
+			);
+			name = VoltTests;
+			packageProductDependencies = (
+			);
+			productName = VoltTests;
+			productReference = 3D92EA1C2F3C03E4007A9731 /* VoltTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		3D92EA252F3C03E4007A9731 /* VoltUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D92EA362F3C03E4007A9731 /* Build configuration list for PBXNativeTarget "VoltUITests" */;
+			buildPhases = (
+				3D92EA222F3C03E4007A9731 /* Sources */,
+				3D92EA232F3C03E4007A9731 /* Frameworks */,
+				3D92EA242F3C03E4007A9731 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D92EA282F3C03E4007A9731 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3D92EA292F3C03E4007A9731 /* VoltUITests */,
+			);
+			name = VoltUITests;
+			packageProductDependencies = (
+			);
+			productName = VoltUITests;
+			productReference = 3D92EA262F3C03E4007A9731 /* VoltUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3D92EA042F3C03E2007A9731 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					3D92EA0B2F3C03E2007A9731 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					3D92EA1B2F3C03E4007A9731 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 3D92EA0B2F3C03E2007A9731;
+					};
+					3D92EA252F3C03E4007A9731 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 3D92EA0B2F3C03E2007A9731;
+					};
+				};
+			};
+			buildConfigurationList = 3D92EA072F3C03E2007A9731 /* Build configuration list for PBXProject "Volt" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3D92EA032F3C03E2007A9731;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3D92EA0D2F3C03E2007A9731 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3D92EA0B2F3C03E2007A9731 /* Volt */,
+				3D92EA1B2F3C03E4007A9731 /* VoltTests */,
+				3D92EA252F3C03E4007A9731 /* VoltUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3D92EA0A2F3C03E2007A9731 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D92EA1A2F3C03E4007A9731 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D92EA242F3C03E4007A9731 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D92EA082F3C03E2007A9731 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D92EA182F3C03E4007A9731 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D92EA222F3C03E4007A9731 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3D92EA1E2F3C03E4007A9731 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D92EA0B2F3C03E2007A9731 /* Volt */;
+			targetProxy = 3D92EA1D2F3C03E4007A9731 /* PBXContainerItemProxy */;
+		};
+		3D92EA282F3C03E4007A9731 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D92EA0B2F3C03E2007A9731 /* Volt */;
+			targetProxy = 3D92EA272F3C03E4007A9731 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3D92EA2E2F3C03E4007A9731 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3D92EA2F2F3C03E4007A9731 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3D92EA312F3C03E4007A9731 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Volt/Volt.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Volt/Preview Content\"";
+				DEVELOPMENT_TEAM = VAHRAM4NQW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Volt/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Required to scan for crowd density";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Required to read HRV for stress analysis.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Required to read HRV.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Volt needs your location to detect when you return to your \"Safe Zone\" to automatically recharge your social battery.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tesseractz77.Volt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3D92EA322F3C03E4007A9731 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Volt/Volt.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Volt/Preview Content\"";
+				DEVELOPMENT_TEAM = VAHRAM4NQW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Volt/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Required to scan for crowd density";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Required to read HRV for stress analysis.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Required to read HRV.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Volt needs your location to detect when you return to your \"Safe Zone\" to automatically recharge your social battery.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tesseractz77.Volt;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		3D92EA342F3C03E4007A9731 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAHRAM4NQW;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tesseractz77.VoltTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Volt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Volt";
+			};
+			name = Debug;
+		};
+		3D92EA352F3C03E4007A9731 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAHRAM4NQW;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tesseractz77.VoltTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Volt.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Volt";
+			};
+			name = Release;
+		};
+		3D92EA372F3C03E4007A9731 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAHRAM4NQW;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tesseractz77.VoltUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Volt;
+			};
+			name = Debug;
+		};
+		3D92EA382F3C03E4007A9731 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VAHRAM4NQW;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tesseractz77.VoltUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Volt;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3D92EA072F3C03E2007A9731 /* Build configuration list for PBXProject "Volt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D92EA2E2F3C03E4007A9731 /* Debug */,
+				3D92EA2F2F3C03E4007A9731 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D92EA302F3C03E4007A9731 /* Build configuration list for PBXNativeTarget "Volt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D92EA312F3C03E4007A9731 /* Debug */,
+				3D92EA322F3C03E4007A9731 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D92EA332F3C03E4007A9731 /* Build configuration list for PBXNativeTarget "VoltTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D92EA342F3C03E4007A9731 /* Debug */,
+				3D92EA352F3C03E4007A9731 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D92EA362F3C03E4007A9731 /* Build configuration list for PBXNativeTarget "VoltUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D92EA372F3C03E4007A9731 /* Debug */,
+				3D92EA382F3C03E4007A9731 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3D92EA042F3C03E2007A9731 /* Project object */;
+}

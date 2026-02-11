@@ -1,56 +1,39 @@
-from math import radians, sin, cos, sqrt, atan2
-from datetime import datetime
+import math
+from typing import Optional
 
-# Constants
-EARTH_RADIUS_KM = 6371.0
-HOME_RADIUS_KM = 0.05  # 50 meters
-BASE_DRAIN_RATE = 5.0  # % per minute (Accelerated for demo)
-CHARGE_RATE = 10.0      # % per minute (Accelerated for demo)
-CROWD_FACTOR = 0.2     # Multiplier per device
+class BatteryService:
+    def __init__(self, baseline_hrv: float = 50.0):
+        self.baseline_hrv = baseline_hrv
 
-def haversine_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    dlat = radians(lat2 - lat1)
-    dlon = radians(lon2 - lon1)
-    a = sin(dlat / 2)**2 + cos(radians(lat1)) * cos(radians(lat2)) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    return EARTH_RADIUS_KM * c
+    def calculate_new_level(
+        self, 
+        current_level: float, 
+        is_home: bool, 
+        device_count: int, 
+        hrv: Optional[float]
+    ) -> dict:
+        # 1. Charging Logic
+        if is_home:
+            new_level = min(100.0, current_level + 1.0)
+            return {"level": round(new_level, 2), "state": "Charging", "multiplier": 0.0}
 
-def calculate_state(
-    current_level: float,
-    current_lat: float,
-    current_lon: float,
-    home_lat: float,
-    home_lon: float,
-    nearby_devices: int,
-    time_delta_seconds: float
-) -> dict:
-    # 1. Distance
-    distance = haversine_distance(current_lat, current_lon, home_lat, home_lon)
-    is_at_home = distance <= HOME_RADIUS_KM
-    
-    # 2. Rate
-    if is_at_home:
-        status = "CHARGING"
-        rate = CHARGE_RATE
-    else:
-        status = "DRAINING"
-        multiplier = 1.0 + (nearby_devices * CROWD_FACTOR)
-        rate = BASE_DRAIN_RATE * multiplier
+        # 2. Draining Logic: Base decay + Bluetooth density
+        base_drain = 0.1
+        social_drain = device_count * 0.2
+        
+        # 3. Physiological Stress Multiplier (HRV fallback logic)
+        multiplier = 1.0
+        if hrv and hrv > 0:
+            # Formula: Baseline / Current. Lower HRV = Higher Multiplier.
+            multiplier = self.baseline_hrv / hrv
+            # Cap multiplier between 0.5x and 3.0x for stability
+            multiplier = max(0.5, min(multiplier, 3.0)) 
 
-    # 3. New Level
-    minutes = time_delta_seconds / 60.0
-    if minutes > 0:
-        if is_at_home:
-            new_level = min(100.0, current_level + (rate * minutes))
-        else:
-            new_level = max(0.0, current_level - (rate * minutes))
-    else:
-        new_level = current_level
+        final_drain = (base_drain + social_drain) * multiplier
+        new_level = max(0.0, current_level - final_drain)
 
-    return {
-        "level": new_level,
-        "status": status,
-        "drain_rate": rate if not is_at_home else -rate,
-        "distance": distance,
-        "is_home": is_at_home
-    }
+        return {
+            "level": round(new_level, 2),
+            "state": "Draining",
+            "multiplier": round(multiplier, 2)
+        }

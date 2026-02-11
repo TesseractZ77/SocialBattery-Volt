@@ -1,6 +1,8 @@
 import SwiftUI
 import CoreLocation
 import Combine
+import CoreBluetooth
+import HealthKit
 
 // MARK: - Models
 struct BatteryState: Codable {
@@ -12,10 +14,6 @@ struct BatteryState: Codable {
 }
 
 // MARK: - View Model
-import CoreBluetooth
-import HealthKit
-
-// MARK: - View Model
 class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, CBCentralManagerDelegate {
     @Published var batteryLevel: Double = 100.0
     @Published var status: String = "CONNECTING..."
@@ -24,6 +22,9 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
     @Published var stressColor: Color = .green
     // UI Controls
     @Published var healthAccessGranted: Bool = false
+    @Published var homeAddressString: String = "Loading..."
+    @Published var currentAddressString: String = "Locating..." // New
+    @Published var isSimulationMode: Bool = false
     
     // Managers
     private let locationManager = CLLocationManager()
@@ -38,9 +39,14 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
             // Persist
             UserDefaults.standard.set(homeLocation.latitude, forKey: "homeLat")
             UserDefaults.standard.set(homeLocation.longitude, forKey: "homeLon")
+            // Re-check geofence immediately
+            if let current = locationManager.location {
+                checkGeofence(currentLocation: current)
+            }
+            // Trigger update to backend immediately
+            sendUpdate()
         }
     }
-    @Published var homeAddressString: String = "Loading..."
     
     // Networking
     private var webSocketTask: URLSessionWebSocketTask?
@@ -62,13 +68,27 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
         connectWebSocket()
         startDataPusher()
         reverseGeocodeHome()
+        updateCurrentAddressRaw()
     }
-    
+
     // MARK: - Location
     func setupLocation() {
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization()
         locationManager.startUpdatingLocation()
+    }
+    
+    func updateCurrentAddressRaw() {
+        guard let loc = locationManager.location else { return }
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(loc) { [weak self] placemarks, _ in
+            if let p = placemarks?.first {
+                let addr = [p.subThoroughfare, p.thoroughfare, p.locality].compactMap { $0 }.joined(separator: " ")
+                DispatchQueue.main.async {
+                    self?.currentAddressString = addr.isEmpty ? "Unknown Area" : addr
+                }
+            }
+        }
     }
     
     func setHomeToCurrentLocation() {
@@ -113,21 +133,33 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
         }
     }
     
+    // Helper for View Access
+    var lastLocation: CLLocationCoordinate2D? {
+        return locationManager.location?.coordinate
+    }
+    
+    func getHomeLocation() -> CLLocationCoordinate2D {
+        return homeLocation
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         // Geofencing Check
         if let current = locations.last {
-            let loc1 = CLLocation(latitude: current.coordinate.latitude, longitude: current.coordinate.longitude)
-            let loc2 = CLLocation(latitude: homeLocation.latitude, longitude: homeLocation.longitude)
-            let distance = loc1.distance(from: loc2)
-            
-            let wasHome = isHome
-            isHome = distance <= 100.0 // 100m Safe Zone
-            
-            if wasHome != isHome {
-                // Trigger Haptics on state change
-                let generator = UIImpactFeedbackGenerator(style: .medium)
-                generator.impactOccurred()
-            }
+            checkGeofence(currentLocation: current)
+        }
+    }
+    
+    private func checkGeofence(currentLocation: CLLocation) {
+        let loc2 = CLLocation(latitude: homeLocation.latitude, longitude: homeLocation.longitude)
+        let distance = currentLocation.distance(from: loc2)
+        
+        let wasHome = isHome
+        isHome = distance <= 100.0 // 100m Safe Zone
+        
+        if wasHome != isHome {
+            // Trigger Haptics on state change
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
         }
     }
     
@@ -139,7 +171,7 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         if central.state == .poweredOn {
             // Scan for peripherals to estimate crowd density
-            central.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+            centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
         }
     }
     
@@ -181,7 +213,8 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
     
     // MARK: - Networking / Sync
     func connectWebSocket() {
-        guard let url = URL(string: "ws://127.0.0.1:8000/ws") else { return }
+        // Updated to use your computer's local network IP
+        guard let url = URL(string: "ws://192.168.0.76:8000/ws") else { return }
         webSocketTask = URLSession.shared.webSocketTask(with: url)
         webSocketTask?.resume()
         listenForMessages()
@@ -218,12 +251,13 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
     }
     
     func updateVisuals(stress: Double) {
-        if isHome {
+        // Color based on Battery Level (iOS Native Behavior)
+        if batteryLevel > 60 {
             stressColor = .green
+        } else if batteryLevel > 20 {
+            stressColor = .yellow
         } else {
-            if stress > 2.0 { stressColor = .red }
-            else if stress > 1.2 { stressColor = .orange }
-            else { stressColor = .yellow }
+            stressColor = .red
         }
     }
     
@@ -246,12 +280,15 @@ class BatteryViewModel: NSObject, ObservableObject, CLLocationManagerDelegate, C
     func sendUpdate() {
         guard let loc = locationManager.location?.coordinate else { return }
         
+        // Simulation Logic
+        let countToSend = isSimulationMode ? 20 : nearbyPeripherals.count
+        
         let payload: [String: Any] = [
             "latitude": loc.latitude,
             "longitude": loc.longitude,
-            "nearby_device_count": nearbyPeripherals.count, // Real BLE count
-            "hrv_value": currentHRV ?? NSNull(), // Real or Null
-            "is_home": isHome // Client-side geofence override
+            "nearby_device_count": countToSend,
+            "hrv_value": currentHRV ?? NSNull(),
+            "is_home": isHome
         ]
         
         if let data = try? JSONSerialization.data(withJSONObject: payload),
@@ -295,42 +332,182 @@ struct Wave: Shape {
     }
 }
 
+// MARK: - Settings View
+struct SettingsView: View {
+    @ObservedObject var viewModel: BatteryViewModel
+    @Binding var addressInput: String
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("My Home")) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Saved Home Address:")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Text(viewModel.homeAddressString)
+                            .font(.headline)
+                    }
+                    .padding(.vertical, 5)
+                    
+                    TextField("Set New Home Address", text: $addressInput, onCommit: {
+                        viewModel.setHomeAddress(addressInput)
+                        addressInput = ""
+                    })
+                }
+                
+                Section(header: Text("Current Location & Status")) {
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("You are currently at:")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        Text(viewModel.currentAddressString)
+                            .font(.body)
+                    }
+                    .padding(.vertical, 5)
+                    
+                    if let userLoc = viewModel.lastLocation {
+                        let distance = CLLocation(latitude: userLoc.latitude, longitude: userLoc.longitude)
+                            .distance(from: CLLocation(latitude: viewModel.getHomeLocation().latitude, longitude: viewModel.getHomeLocation().longitude))
+                        
+                        HStack {
+                            Text("Distance to Home:")
+                            Spacer()
+                            Text("\(Int(distance))m")
+                                .bold()
+                                .foregroundColor(distance > 100 ? .orange : .green)
+                        }
+                        
+                        HStack {
+                            Text("Status:")
+                            Spacer()
+                            Text(distance > 100 ? "Away (Draining)" : "Home (Recharging)")
+                                .foregroundColor(distance > 100 ? .orange : .green)
+                        }
+                    }
+                    
+                    Button(action: {
+                        viewModel.setHomeToCurrentLocation()
+                    }) {
+                        HStack {
+                            Image(systemName: "mappin.and.ellipse")
+                            Text("Set 'Home' to Here")
+                        }
+                    }
+                }
+                
+                Section(header: Text("Sensors")) {
+                    Button(action: {
+                        viewModel.requestHealthAccess()
+                    }) {
+                        HStack {
+                            Image(systemName: "heart.text.square.fill")
+                                .foregroundColor(viewModel.healthAccessGranted ? .green : .blue)
+                            Text(viewModel.healthAccessGranted ? "Health Data Connected" : "Connect Health Data")
+                                .foregroundColor(.primary)
+                        }
+                    }
+                    
+                    Toggle(isOn: $viewModel.isSimulationMode) {
+                        HStack {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                                .foregroundColor(.orange)
+                            VStack(alignment: .leading) {
+                                Text("Simulate Crowded Room")
+                                Text("Forces 20 devices to test drain")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
+                }
+                
+                Section(footer: Text("Volt v1.0")) {
+                    EmptyView()
+                    
+                }
+            }
+            .navigationTitle("Settings")
+            .navigationBarItems(trailing: Button("Done") {
+                presentationMode.wrappedValue.dismiss()
+            })
+            .onAppear {
+                viewModel.updateCurrentAddressRaw()
+            }
+        }
+    }
+}
+
 // MARK: - Main View
 struct BatteryView: View {
     @StateObject private var viewModel = BatteryViewModel()
     @State private var waveOffset = Angle(degrees: 0)
     @State private var addressInput: String = ""
+    @State private var showSettings = false
     
     var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
             
             VStack {
-                Text("VOLT")
-                    .font(.system(size: 20, weight: .bold, design: .monospaced))
-                    .foregroundColor(.white.opacity(0.8))
-                    .padding(.top, 50)
+                // Header
+                HStack {
+                    Spacer()
+                    Text("VOLT")
+                        .font(.system(size: 20, weight: .bold, design: .monospaced))
+                        .foregroundColor(.white.opacity(0.8))
+                        // Center the text absolute by using overlay or manual padding, 
+                        // but Spacer+Spacer works for simple implementation
+                    Spacer()
+                }
+                .overlay(
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            showSettings = true
+                        }) {
+                            Image(systemName: "gearshape.fill")
+                                .font(.system(size: 20))
+                                .foregroundColor(.white.opacity(0.8))
+                                .padding()
+                        }
+                    }
+                )
+                .padding(.top, 50)
                 
                 Spacer()
                 
                 // Battery Container
                 ZStack(alignment: .bottom) {
-                    // Glass Container
-                    RoundedRectangle(cornerRadius: 30)
-                        .stroke(Color.white.opacity(0.2), lineWidth: 2)
-                        .frame(width: 200, height: 400)
-                        .background(Color.white.opacity(0.05))
+                    // Battery Body Outline
+                    RoundedRectangle(cornerRadius: 26) // iOS style curvature
+                        .stroke(Color.gray.opacity(0.5), lineWidth: 3)
+                        .frame(width: 150, height: 280)
+                        // Add Main Background (Glassy)
+                        .background(
+                            RoundedRectangle(cornerRadius: 26)
+                                .fill(Material.ultraThinMaterial) // Native Blur
+                        )
+                        .overlay(
+                            // Battery Cap (Nub)
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(Color.gray.opacity(0.5))
+                                .frame(width: 60, height: 10)
+                                .offset(y: -150) // Position on top
+                        , alignment: .top)
                     
-                    // Liquid
+                    // Liquid Wave
                     Wave(offset: waveOffset, percent: viewModel.batteryLevel / 100.0)
                         .fill(LinearGradient(
-                            gradient: Gradient(colors: [viewModel.stressColor.opacity(0.7), viewModel.stressColor]),
-                            startPoint: .top,
-                            endPoint: .bottom
+                            gradient: Gradient(colors: [viewModel.stressColor, viewModel.stressColor.opacity(0.8)]),
+                            startPoint: .bottom,
+                            endPoint: .top
                         ))
-                        .frame(width: 196, height: 396)
-                        .mask(RoundedRectangle(cornerRadius: 28))
-                        .offset(y: -2)
+                        .frame(width: 144, height: 274)
+                        .mask(RoundedRectangle(cornerRadius: 22))
+                        .offset(y: -3) // slight manual inset adjustment
+                        .shadow(color: viewModel.stressColor.opacity(0.5), radius: 10, x: 0, y: 0) // Glow effect
                 }
                 .onAppear {
                     // Default Animation
@@ -339,9 +516,7 @@ struct BatteryView: View {
                     }
                 }
                 .onChange(of: viewModel.status) { _ in
-                    // Adaptive Animation: Reset with new speed based on status/color
-                    // Note: In simple SwiftUI, changing duration on the fly for repeatForever is tricky.
-                    // For now, we stick to the color change which is the main visual indicator of stress.
+                    // Adaptive Animation stub
                 }
                 
                 Spacer()
@@ -362,64 +537,11 @@ struct BatteryView: View {
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
-                .padding(.bottom, 20)
-                
-                // Controls
-                VStack(spacing: 12) {
-                    // Home Info & Settings
-                    VStack(spacing: 8) {
-                        Text("Home: " + viewModel.homeAddressString)
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                        
-                        HStack {
-                            // Current Location Button
-                            Button(action: {
-                                viewModel.setHomeToCurrentLocation()
-                            }) {
-                                Image(systemName: "location.fill")
-                                    .padding()
-                                    .background(Color.white.opacity(0.1))
-                                    .foregroundColor(.white)
-                                    .cornerRadius(10)
-                            }
-                            
-                            // Text Input Field (Simple version implemented via a Button that shows an Alert in a real app, 
-                            // but for this MVP we'll use a ZStack overlay or just a text field if space permits.
-                            // To keep it clean, let's use a TextField).
-                            
-                            // actually, let's just put the TextField here
-                            TextField("Enter Home Address", text: $addressInput, onCommit: {
-                                viewModel.setHomeAddress(addressInput)
-                                addressInput = ""
-                            })
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .padding(.horizontal, 4)
-                            .colorScheme(.light) // Force light mode for text field readability
-                        }
-                    }
-                    .padding()
-                    .background(Color.white.opacity(0.05))
-                    .cornerRadius(15)
-                    
-                    // Health Connect
-                    Button(action: {
-                        viewModel.requestHealthAccess()
-                    }) {
-                        HStack {
-                            Image(systemName: "heart.text.square.fill")
-                            Text(viewModel.healthAccessGranted ? "Health Data Connected" : "Connect Health Data")
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(viewModel.healthAccessGranted ? Color.green.opacity(0.3) : Color.white.opacity(0.1))
-                        .foregroundColor(viewModel.healthAccessGranted ? .green : .white)
-                        .cornerRadius(10)
-                    }
-                }
-                .padding(.horizontal, 30)
-                .padding(.bottom, 30)
+                .padding(.bottom, 50)
             }
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView(viewModel: viewModel, addressInput: $addressInput)
         }
     }
 }
