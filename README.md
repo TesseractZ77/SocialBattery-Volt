@@ -59,6 +59,23 @@ Recharge = BaseRechargeRate (e.g., 2.0 units per tick)
 
 - Recharging stops automatically at 100%.
 
+### Algorithm Deep Dive
+
+#### 1. Why HRV (Heart Rate Variability)?
+HRV is the gold standard for assessing the state of the autonomic nervous system.
+- **The Science**: When you experience social anxiety or stress, your sympathetic nervous system becomes active, causing your heart rate to become abnormally regular (low HRV).
+- **The Human Element**: The algorithm detects this drop. If your HRV is low (stress high), it applies a multiplier to the drain rate. This simulates the "human factor": in the exact same party, an introvert (who might be more stressed) will drain their battery faster than an extrovert.
+
+#### 2. Bluetooth as a "Proxy Sensor"
+Since we cannot count people directly, Bluetooth device density acts as a highly effective **proxy**.
+- **The Metaphor**: This represents not just "people," but "electronic interference" and crowd complexity.
+- **The Cost**: Every detected device is treated as a micro-stressor. Even without direct interaction, the mere presence of these devices contributes to the "sensing cost" of your social battery.
+
+#### 3. Graceful Degradation
+The system is designed to work robustly whether you have an Apple Watch or not.
+- **With Watch**: The algorithm runs in **Dual Mode** (Physiological + Environmental). This is the most accurate reflection of your true fatigue.
+- **Without Watch**: The system seamlessly degrades to **Environmental Mode**. The `stress_multiplier` defaults to `1.0`. The app remains a precise "Social Environment Sensor," calculating drain based purely on crowd density and location.
+
 ## Setup & Running
 
 ### 1. Backend
